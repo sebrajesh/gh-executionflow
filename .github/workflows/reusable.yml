@@ -7,9 +7,19 @@ on:
                 required: false
                 default: dist
                 type: string
+        outputs:
+            result:
+                description: The result of the deployment operation
+                value: ${{ jbobs.deploy.outputs.outcome }}
+        # secrets:
+        #     some-secret:
+        #         required: false
 
 jobs:
     deploy:
+        outputs:
+            outcome: ${{ steps.set-output.outputs.step-result }}
+
         runs-on: ubuntu-latest
         steps:
             - name: Get build artifacts
@@ -20,4 +30,7 @@ jobs:
               run: ls
             - name: OUtput information
               run: echo "Deploying & uploading...      "
+            - name: set result output
+              id: set-output
+              run: echo "step-result=success" >> $GITHUB_OUTPUT
 
